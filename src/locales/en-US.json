@@ -1,0 +1,72 @@
+{
+    "welcome": {
+        "title": "Welcome to AniCam",
+        "description": "View your Tesla dashcam footage with synchronized multi-camera playback and embedded telemetry data.",
+        "selectFolder": "Select TeslaCam Folder",
+        "hint": "Plug in your Tesla USB drive and select the drive, TeslaCam folder, or a specific clip folder"
+    },
+    "common": {
+        "selectTeslaCamFolder": "Select TeslaCam Folder",
+        "clips": "Clips",
+        "noClips": "Select your TeslaCam folder to view clips",
+        "unknownLocation": "Unknown Location",
+        "savedClips": "Saved Clips",
+        "sentryClips": "Sentry Clips",
+        "recentClips": "Recent Clips",
+        "segment": "Segment"
+    },
+    "telemetry": {
+        "acc": "ACC",
+        "brk": "BRAKE",
+        "gear": "Gear",
+        "gps": "GPS",
+        "sei": "SEI",
+        "noSei": "No SEI",
+        "noDataAvailable": "No Drive Data Available",
+        "mode": "Mode"
+    },
+    "controls": {
+        "playPause": "Play/Pause",
+        "skipBack": "Skip back {{seconds}}s",
+        "skipForward": "Skip forward {{seconds}}s",
+        "toggleLayout": "Toggle layout",
+        "toggleTelemetry": "Toggle telemetry"
+    },
+    "cameras": {
+        "front": "Front",
+        "left_pillar": "Left Pillar",
+        "right_pillar": "Right Pillar",
+        "back": "Back",
+        "left_repeater": "Left Repeater",
+        "right_repeater": "Right Repeater"
+    },
+    "reasons": {
+        "manual_save": "Manual Save",
+        "quick_save": "Quick Save",
+        "honk": "Honk Triggered",
+        "sentry_object": "Sentry: Object Detected",
+        "sentry_motion": "Sentry: Movement Detected",
+        "sentry_impact": "Sentry: Impact Detected",
+        "sentry_event": "Sentry Event",
+        "collision": "Collision Detected",
+        "aeb": "Automatic Emergency Braking"
+    },
+    "autopilot": {
+        "off": "Off",
+        "fsd": "FSD",
+        "autosteer": "AP",
+        "tacc": "TACC"
+    },
+    "errors": {
+        "fileSystemApi": "Your browser does not support the File System Access API. Please use Chrome, Edge, or another Chromium-based browser.",
+        "folderAccess": "Error accessing folder: {{error}}"
+    },
+    "warnings": {
+        "singleCategoryFolder": "You selected a single category folder. Some clips might not be visible. Please select the 'TeslaCam' folder for the full experience."
+    },
+    "loading": {
+        "filteringFiles": "Scanning files... {{percent}}%",
+        "buildingStructure": "Building folder structure... {{percent}}%",
+        "scanningClips": "Scanning for clips..."
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "welcome": {
+        "title": "欢迎使用 AniCam",
+        "description": "查看您的特斯拉行车记录仪视频，支持多视角同步播放和嵌入式遥测数据。",
+        "selectFolder": "选择 TeslaCam 文件夹",
+        "hint": "插入您的特斯拉 U 盘，然后选择驱动器、TeslaCam 文件夹或特定的片段文件夹"
+    },
+    "common": {
+        "selectTeslaCamFolder": "选择 TeslaCam 文件夹",
+        "clips": "片段",
+        "noClips": "选择您的 TeslaCam 文件夹以查看片段",
+        "unknownLocation": "未知位置",
+        "savedClips": "已保存片段",
+        "sentryClips": "哨兵模式片段",
+        "recentClips": "最近片段",
+        "segment": "视频分片"
+    },
+    "telemetry": {
+        "acc": "加速",
+        "brk": "刹车",
+        "gear": "档位",
+        "gps": "GPS",
+        "sei": "SEI",
+        "noSei": "无 SEI 数据",
+        "noDataAvailable": "无驾驶数据",
+        "mode": "模式"
+    },
+    "controls": {
+        "playPause": "播放/暂停",
+        "skipBack": "后退 {{seconds}} 秒",
+        "skipForward": "快进 {{seconds}} 秒",
+        "toggleLayout": "切换布局",
+        "toggleTelemetry": "切换遥测数据"
+    },
+    "cameras": {
+        "front": "前视",
+        "left_pillar": "左侧柱",
+        "right_pillar": "右侧柱",
+        "back": "后视",
+        "left_repeater": "左侧后视",
+        "right_repeater": "右侧后视"
+    },
+    "reasons": {
+        "manual_save": "手动保存",
+        "quick_save": "快速保存",
+        "honk": "鸣笛触发",
+        "sentry_object": "哨兵：检测到物体",
+        "sentry_motion": "哨兵：检测到移动",
+        "sentry_impact": "哨兵：检测到撞击",
+        "sentry_event": "哨兵事件",
+        "collision": "检测到碰撞",
+        "aeb": "自动紧急制动"
+    },
+    "autopilot": {
+        "off": "关闭",
+        "fsd": "FSD",
+        "autosteer": "AP",
+        "tacc": "TACC"
+    },
+    "errors": {
+        "fileSystemApi": "您的浏览器不支持文件系统访问 API。请使用 Chrome、Edge 或其他基于 Chromium 的浏览器。",
+        "folderAccess": "访问文件夹时出错：{{error}}"
+    },
+    "warnings": {
+        "singleCategoryFolder": "您选择了一个单一类别的文件夹。其他类型的片段将不可见。请选择 'TeslaCam' 文件夹以获得完整体验。"
+    },
+    "loading": {
+        "filteringFiles": "正在扫描文件... {{percent}}%",
+        "buildingStructure": "正在构建文件夹结构... {{percent}}%",
+        "scanningClips": "正在扫描片段..."
+    }
+}
