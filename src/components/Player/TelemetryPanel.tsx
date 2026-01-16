@@ -145,9 +145,13 @@ export function TelemetryPanel({
                     {/* Pedals Section (Left) */}
                     <div className="telemetry-section pedals-section" style={{ borderRight: 'none' }}>
                         {/* Brake Indicator (Boolean) */}
-                        <div className={`brake-indicator ${brakeApplied ? 'active' : ''}`}>
-                            <span className="brake-label">{t('telemetry.brk')}</span>
-                        </div>
+                        {/* Brake Bar */}
+                        <PedalBar
+                            label={t('telemetry.brk')}
+                            value={brakeApplied ? 100 : 0}
+                            color="red"
+                            active={telemetry?.brake_applied !== undefined}
+                        />
                         {/* Accelerator Bar */}
                         <PedalBar
                             label={t('telemetry.acc')}

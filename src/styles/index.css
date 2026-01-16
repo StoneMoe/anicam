@@ -712,14 +712,14 @@ body {
 }
 
 .control-buttons {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  position: relative;
   gap: var(--spacing-sm);
 }
 
 .main-controls {
-  grid-column: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -727,8 +727,8 @@ body {
 }
 
 .secondary-controls {
-  grid-column: 3;
-  justify-self: end;
+  position: absolute;
+  right: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -801,6 +801,7 @@ body {
   }
 
   /* Flatten layout on mobile */
+  /* Flatten layout on mobile - Removed as base layout now handles this correctly
   .control-buttons {
     display: flex;
     justify-content: space-between;
@@ -808,20 +809,18 @@ body {
     gap: var(--spacing-xs);
   }
 
-  /* Main controls center */
   .main-controls {
-    /* Remove grid-column since we are flex now */
     grid-column: auto;
     flex: 1;
     justify-content: center;
   }
 
   .secondary-controls {
-    /* Keep container but reset alignment */
     grid-column: auto;
     width: auto;
     flex: 0;
   }
+  */
 }
 
 .btn-control {
@@ -1020,25 +1019,7 @@ body {
   transition: height 0.1s ease-out;
 }
 
-.brake-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  padding: 0 var(--spacing-md);
-  background: var(--color-bg-tertiary);
-  border-radius: 4px;
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: all 0.1s ease-out;
-}
 
-.brake-indicator.active {
-  background: var(--color-accent);
-  color: white;
-  box-shadow: 0 0 10px var(--color-accent-glow);
-}
 
 .pedal-bar-value {
   font-size: 0.6rem;
