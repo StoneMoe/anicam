@@ -13,7 +13,9 @@
         "savedClips": "已保存片段",
         "sentryClips": "哨兵模式片段",
         "recentClips": "最近片段",
-        "segment": "视频分片"
+        "segment": "视频分片",
+        "speed": "倍速",
+        "more": "更多"
     },
     "telemetry": {
         "acc": "加速",

@@ -13,7 +13,9 @@
         "savedClips": "Saved Clips",
         "sentryClips": "Sentry Clips",
         "recentClips": "Recent Clips",
-        "segment": "Segment"
+        "segment": "Segment",
+        "speed": "Speed",
+        "more": "More"
     },
     "telemetry": {
         "acc": "ACC",
