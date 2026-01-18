@@ -15,7 +15,8 @@
         "recentClips": "Recent Clips",
         "segment": "Segment",
         "speed": "Speed",
-        "more": "More"
+        "more": "More",
+        "noClipsFound": "No clips found"
     },
     "telemetry": {
         "acc": "ACC",
@@ -25,14 +26,15 @@
         "sei": "SEI",
         "noSei": "No SEI",
         "noDataAvailable": "No Drive Data Available",
-        "mode": "Mode"
+        "mode": "Mode",
+        "advancedInfo": "Advanced Info"
     },
     "controls": {
         "playPause": "Play/Pause",
         "skipBack": "Skip back {{seconds}}s",
         "skipForward": "Skip forward {{seconds}}s",
-        "toggleLayout": "Toggle layout",
-        "toggleTelemetry": "Toggle telemetry"
+        "toggleLayout": "Layout",
+        "toggleTelemetry": "Drive Data"
     },
     "cameras": {
         "front": "Front",

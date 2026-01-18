@@ -291,14 +291,17 @@ body {
 }
 
 .category-clips {
-  padding: var(--spacing-xs) 0;
+  padding: 0;
   max-height: 0;
+  opacity: 0;
   overflow: hidden;
-  transition: max-height var(--transition-normal);
+  transition: max-height var(--transition-normal), padding var(--transition-normal), opacity var(--transition-normal);
 }
 
 .category.expanded .category-clips {
   max-height: 2000px;
+  padding: var(--spacing-xs) 0;
+  opacity: 1;
 }
 
 .clip-item {
@@ -319,6 +322,14 @@ body {
 .clip-item.active {
   background: rgba(232, 33, 39, 0.15);
   border-left: 3px solid var(--color-accent);
+}
+
+.category-empty {
+  padding: var(--spacing-md);
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
 .clip-item-thumb {
@@ -782,6 +793,8 @@ body {
 }
 
 .menu-item svg {
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
 }
 
@@ -848,8 +861,8 @@ body {
 }
 
 .btn-control.btn-play {
-  width: 52px;
-  height: 52px;
+  width: 40px;
+  height: 40px;
   background: var(--color-accent);
   color: white;
   border-radius: 50%;
@@ -861,8 +874,8 @@ body {
 }
 
 .btn-control.btn-play svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .btn-play .pause-icon {
@@ -904,6 +917,7 @@ body {
   flex-shrink: 0;
   transition: max-height var(--transition-normal), padding var(--transition-normal);
   overflow: hidden;
+  position: relative;
 }
 
 .telemetry-content-wrapper {
@@ -945,6 +959,8 @@ body {
   align-items: center;
   gap: var(--spacing-lg);
   height: 60px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .telemetry-section {
@@ -1022,10 +1038,18 @@ body {
 
 
 .pedal-bar-value {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-size: 0.6rem;
-  font-weight: 500;
-  color: var(--color-text-tertiary);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   font-variant-numeric: tabular-nums;
+  z-index: 10;
+  pointer-events: none;
 }
 
 /* Speed Section */
@@ -1123,9 +1147,8 @@ body {
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  background: var(--color-bg-elevated);
   color: var(--color-text-muted);
+  opacity: 0.3;
   transition: color var(--transition-fast);
 }
 
@@ -1147,37 +1170,15 @@ body {
 
 
 
-/* Toggle Button */
-.toggle-advanced-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  color: var(--color-text-muted);
+/* Make the whole row look interactive */
+.telemetry-content-wrapper.clickable-row {
   cursor: pointer;
-  transition: all var(--transition-fast);
-  margin-left: auto;
-  /* Push to right */
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), opacity var(--transition-normal);
 }
 
-.toggle-advanced-btn:hover,
-.toggle-advanced-btn.active {
+.telemetry-content-wrapper.clickable-row:hover {
   background: var(--color-bg-hover);
-  color: var(--color-text-primary);
-}
-
-.toggle-advanced-btn.active svg {
-  transform: rotate(180deg);
-}
-
-.toggle-advanced-btn svg {
-  width: 16px;
-  height: 16px;
-  transition: transform var(--transition-fast);
 }
 
 /* Advanced Row */
@@ -1386,8 +1387,8 @@ body {
   }
 
   .btn-control.btn-play {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
   }
 
   .speed-select {
@@ -1415,7 +1416,7 @@ body {
 
   /* Telemetry merged status */
   .gear-row {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
   }
 
@@ -1426,7 +1427,7 @@ body {
   .status-display {
     border-left: none;
     padding-left: 0;
-    margin-top: 2px;
+    margin-top: 0;
   }
 
 

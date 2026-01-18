@@ -26,9 +26,14 @@ export function VideoGrid({
     const [, setLoadedUrlsVersion] = useState(0);
 
     // Load videos when segment changes
+    // Use ref to track which segment we're loading for race condition prevention
+    const currentSegmentRef = useRef<Segment | null>(null);
+
     useEffect(() => {
         if (!segment) return;
 
+        // Track which segment this effect is loading for
+        currentSegmentRef.current = segment;
         let isCancelled = false;
 
         const loadVideos = async () => {
@@ -62,7 +67,8 @@ export function VideoGrid({
                     if (fileHandle) {
                         try {
                             const url = await loadVideoUrl(fileHandle);
-                            if (!isCancelled) {
+                            // Check both cancellation flag AND segment ref to prevent race conditions
+                            if (!isCancelled && currentSegmentRef.current === segment) {
                                 newUrls[cam] = url;
                                 const video = videoRefs[cam]?.current;
                                 if (video) {
@@ -79,7 +85,7 @@ export function VideoGrid({
                 })
             );
 
-            if (!isCancelled) {
+            if (!isCancelled && currentSegmentRef.current === segment) {
                 loadedUrlsRef.current = newUrls as Record<Camera, string>;
                 setLoadedUrlsVersion((v) => v + 1);
             }

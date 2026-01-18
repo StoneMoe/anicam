@@ -63,3 +63,18 @@ export const AUTOPILOT_LABELS: Record<number, string> = {
     2: 'autopilot.autosteer',
     3: 'autopilot.tacc',
 };
+
+// Video playback constants
+// Tesla dashcam videos are recorded at 36.1 fps
+export const VIDEO_FPS = 36.1;
+
+// Sync threshold for multi-camera playback (seconds)
+// If a camera drifts more than this from the front camera, it will be re-synced
+export const SYNC_DRIFT_THRESHOLD = 0.15;
+
+// Stall detection threshold (frames at ~60Hz)
+// Consider a video stalled after this many frames without time progress
+export const STALL_THRESHOLD_FRAMES = 30; // ~500ms at 60Hz
+
+// Default segment duration when metadata cannot be read (seconds)
+export const DEFAULT_SEGMENT_DURATION = 60;

@@ -57,14 +57,18 @@ export function ClipCategorySection({
                 <span className="count">{clips.length}</span>
             </div>
             <div className="category-clips">
-                {clips.map((clip) => (
-                    <ClipItem
-                        key={clip.name}
-                        clip={clip}
-                        isActive={currentClip?.name === clip.name}
-                        onClick={() => onSelectClip(clip)}
-                    />
-                ))}
+                {clips.length === 0 ? (
+                    <div className="category-empty">{t('common.noClipsFound')}</div>
+                ) : (
+                    clips.map((clip) => (
+                        <ClipItem
+                            key={clip.name}
+                            clip={clip}
+                            isActive={currentClip?.name === clip.name}
+                            onClick={() => onSelectClip(clip)}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );

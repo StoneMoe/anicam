@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import type { ClipInfo, Segment, SegmentTiming, Camera } from '../types';
-import { CAMERAS } from '../utils/constants';
+import { CAMERAS, SYNC_DRIFT_THRESHOLD, STALL_THRESHOLD_FRAMES, DEFAULT_SEGMENT_DURATION } from '../utils/constants';
 
 interface UseUnifiedTimelineReturn {
     // Timeline state
@@ -8,7 +8,6 @@ interface UseUnifiedTimelineReturn {
     currentTime: number;
     currentSegmentIndex: number;
     segmentTimings: SegmentTiming[];
-    isReady: boolean;
 
     // Video refs for each camera
     videoRefs: Record<Camera, React.RefObject<HTMLVideoElement | null>>;
@@ -21,6 +20,10 @@ interface UseUnifiedTimelineReturn {
 
     // Segment info at current time
     getCurrentSegment: () => Segment | null;
+
+    // Error state
+    loadErrors: string[];
+    clearErrors: () => void;
 }
 
 export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
@@ -29,6 +32,7 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
     const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [isReady, setIsReady] = useState(false);
+    const [loadErrors, setLoadErrors] = useState<string[]>([]);
 
     // Create refs for all cameras
     const videoRefs = useMemo(() => {
@@ -105,9 +109,11 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
         setClip(newClip);
         setCurrentSegmentIndex(0);
         setCurrentTime(0);
+        setLoadErrors([]);
 
         // Calculate durations for all segments by loading front camera videos
         const durations: number[] = [];
+        const errors: string[] = [];
 
         for (const segment of newClip.segments) {
             const frontHandle = segment.files.front;
@@ -122,26 +128,42 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
                         tempVideo.preload = 'metadata';
                         tempVideo.onloadedmetadata = () => {
                             URL.revokeObjectURL(url);
-                            resolve(tempVideo.duration || 60); // Default 60s if unknown
+                            resolve(tempVideo.duration || DEFAULT_SEGMENT_DURATION);
                         };
                         tempVideo.onerror = () => {
                             URL.revokeObjectURL(url);
-                            resolve(60); // Default on error
+                            const errorMsg = `Failed to load segment ${segment.timeStr}`;
+                            console.warn(errorMsg);
+                            errors.push(errorMsg);
+                            resolve(DEFAULT_SEGMENT_DURATION);
                         };
                         tempVideo.src = url;
                     });
 
                     durations.push(duration);
-                } catch {
-                    durations.push(60); // Default duration
+                } catch (err) {
+                    const errorMsg = `Error loading segment ${segment.timeStr}: ${err}`;
+                    console.warn(errorMsg);
+                    errors.push(errorMsg);
+                    durations.push(DEFAULT_SEGMENT_DURATION);
                 }
             } else {
-                durations.push(60); // Default if no front camera
+                durations.push(DEFAULT_SEGMENT_DURATION);
             }
         }
 
         setSegmentDurations(durations);
+        if (errors.length > 0) {
+            setLoadErrors(errors);
+        }
         setIsReady(true);
+    }, []);
+
+    /**
+     * Clear load errors
+     */
+    const clearErrors = useCallback(() => {
+        setLoadErrors([]);
     }, []);
 
     /**
@@ -236,30 +258,6 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
             }
         };
 
-        const syncVideo = (video: HTMLVideoElement, isMaster: boolean) => {
-            // Basic sync for slave cameras
-            if (!isMaster && frontVideo) {
-                if (Math.abs(video.currentTime - frontVideo.currentTime) > 0.5) {
-                    video.currentTime = frontVideo.currentTime;
-                }
-            }
-        };
-
-        const listeners = new Map<HTMLVideoElement, { load: () => void; play: () => void }>();
-
-        for (const cam of CAMERAS) {
-            const video = videoRefHolders.current[cam]?.current;
-            if (!video) continue;
-
-            const isMaster = cam === 'front';
-            const loadHandler = () => syncVideo(video, isMaster);
-            const playHandler = () => syncVideo(video, isMaster);
-
-            video.addEventListener('loadedmetadata', loadHandler);
-            video.addEventListener('canplay', playHandler);
-
-            listeners.set(video, { load: loadHandler, play: playHandler });
-        }
 
         frontVideo.addEventListener('ended', handleEnded);
 
@@ -270,12 +268,15 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
         // Track stall state for all cameras
         const lastTimes: Record<string, number> = {};
         const stallCounts: Record<string, number> = {};
+        const recoveryAttempts: Record<string, number> = {}; // Track graduated recovery attempts
         for (const cam of CAMERAS) {
             lastTimes[cam] = 0;
             stallCounts[cam] = 0;
+            recoveryAttempts[cam] = 0;
         }
 
-        const STALL_THRESHOLD = 18; // ~500ms at 36Hz - consider stalled after this many frames without progress
+        // requestAnimationFrame runs at display refresh rate (~60Hz), not video fps (36.1fps)
+        // STALL_THRESHOLD_FRAMES defined in constants.ts
 
         const frameLoop = () => {
             const frontVid = videoRefHolders.current.front?.current;
@@ -341,15 +342,29 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
 
                             if (Math.abs(currentTime - lastTime) > 0.001) {
                                 stallCounts[cam] = 0;
+                                recoveryAttempts[cam] = 0;
                             } else {
                                 stallCounts[cam] = (stallCounts[cam] || 0) + 1;
-                                if (stallCounts[cam] >= STALL_THRESHOLD) {
-                                    // play() sometimes fails to recover, try nudging time slightly
-                                    if (video.duration && video.currentTime < video.duration - 0.1) {
-                                        video.currentTime += 0.01;
-                                    } else {
+                                if (stallCounts[cam] >= STALL_THRESHOLD_FRAMES) {
+                                    // Graduated recovery strategy
+                                    const attempt = recoveryAttempts[cam];
+                                    if (attempt === 0) {
+                                        // First attempt: just play()
                                         video.play().catch(() => { });
+                                    } else if (attempt === 1) {
+                                        // Second attempt: sync to front camera + play()
+                                        const frontVidRef = videoRefHolders.current.front?.current;
+                                        if (frontVidRef) {
+                                            video.currentTime = frontVidRef.currentTime;
+                                        }
+                                        video.play().catch(() => { });
+                                    } else {
+                                        // Final attempt: nudge time slightly
+                                        if (video.duration && video.currentTime < video.duration - 0.1) {
+                                            video.currentTime += 0.01;
+                                        }
                                     }
+                                    recoveryAttempts[cam] = (attempt + 1) % 3; // Cycle through attempts
                                     stallCounts[cam] = 0;
                                 }
                             }
@@ -360,14 +375,14 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
                     }
 
                     // Only sync slave cameras when front is actively progressing
-                    // Throttle to run every ~18 frames to avoid excessive seeks
-                    if (frameCount % 18 === 0) {
+                    // Throttle to run every ~30 frames (~500ms at 60Hz) to avoid excessive seeks
+                    if (frameCount % 30 === 0) {
                         for (const cam of CAMERAS) {
                             if (cam === 'front') continue;
                             const video = videoRefHolders.current[cam]?.current;
                             if (video && video.src && video.readyState >= 2) {
-                                // Sync time if drift is more than 0.3 seconds
-                                if (Math.abs(video.currentTime - currentFrontTime) > 0.3) {
+                                // Sync time if drift exceeds threshold
+                                if (Math.abs(video.currentTime - currentFrontTime) > SYNC_DRIFT_THRESHOLD) {
                                     video.currentTime = currentFrontTime;
                                 }
                                 // Resume paused slave cameras when front is playing
@@ -383,14 +398,23 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
                     stallCounts['front'] = count;
 
                     // Front camera appears stalled - try to recover
-                    if (count >= STALL_THRESHOLD) {
-                        // Attempt to resume front camera
-                        if (frontVid.duration && frontVid.currentTime < frontVid.duration - 0.1) {
-                            frontVid.currentTime += 0.01;
-                        } else {
+                    if (count >= STALL_THRESHOLD_FRAMES) {
+                        // Graduated recovery for front camera
+                        const attempt = recoveryAttempts['front'];
+                        if (attempt === 0) {
+                            // First attempt: just play()
                             frontVid.play().catch(() => { });
+                        } else if (attempt === 1) {
+                            // Second attempt: reload video source
+                            frontVid.load();
+                            frontVid.play().catch(() => { });
+                        } else {
+                            // Final attempt: nudge time
+                            if (frontVid.duration && frontVid.currentTime < frontVid.duration - 0.1) {
+                                frontVid.currentTime += 0.01;
+                            }
                         }
-                        // Reset stall counter to avoid spamming play() calls
+                        recoveryAttempts['front'] = (attempt + 1) % 3;
                         stallCounts['front'] = 0;
                     }
                 }
@@ -411,10 +435,6 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
         return () => {
             cancelAnimationFrame(animationFrameId);
             frontVideo.removeEventListener('ended', handleEnded);
-            for (const [video, handlers] of listeners) {
-                video.removeEventListener('loadedmetadata', handlers.load);
-                video.removeEventListener('canplay', handlers.play);
-            }
         };
     }, [clip, currentSegmentIndex, segmentTimings, isReady]);
 
@@ -423,12 +443,13 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
         currentTime,
         currentSegmentIndex,
         segmentTimings,
-        isReady,
         videoRefs: videoRefHolders.current,
         seekTo,
         seekToPercent,
         skip,
         loadClip,
         getCurrentSegment,
+        loadErrors,
+        clearErrors,
     };
 }

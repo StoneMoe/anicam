@@ -11,36 +11,15 @@ interface TelemetryPanelProps {
 }
 
 // Steering Wheel Icon Component
+// Steering Wheel Icon Component
 function SteeringWheelIcon({ rotation }: { rotation: number }) {
     return (
-        <svg
+        <img
+            src="/steer.png"
             className="steering-wheel-icon"
-            viewBox="0 0 100 100"
+            alt="Steering Wheel"
             style={{ transform: `rotate(${rotation}deg)` }}
-        >
-            {/* Rim (filled ring) */}
-            <path
-                d="M50 5
-                   A45 45 0 1 0 50 95
-                   A45 45 0 1 0 50 5
-                   Z
-                   M50 13
-                   A37 37 0 1 1 50 87
-                   A37 37 0 1 1 50 13
-                   Z"
-                fill="currentColor"
-                fillRule="evenodd"
-            />
-            {/* Center Hub & Spokes */}
-            {/* Horizontal Spoke */}
-            <rect x="15" y="44" width="70" height="12" rx="4" fill="currentColor" />
-            {/* Bottom Spoke */}
-            <path d="M44 50 L44 87 L56 87 L56 50 Z" fill="currentColor" />
-            {/* Center Cap */}
-            <circle cx="50" cy="50" r="14" fill="currentColor" />
-            {/* Detail: Inner Cutout for Hub to make it look like a wheel assembly */}
-            <circle cx="50" cy="50" r="6" fill="var(--color-bg-secondary)" />
-        </svg>
+        />
     );
 }
 
@@ -50,9 +29,10 @@ interface PedalBarProps {
     value: number; // 0-100
     color: 'green' | 'red';
     active?: boolean;
+    customText?: string;
 }
 
-function PedalBar({ label, value, color, active = true }: PedalBarProps) {
+function PedalBar({ label, value, color, active = true, customText }: PedalBarProps) {
     const barColor = color === 'green' ? 'var(--color-success)' : 'var(--color-accent)';
     const displayValue = active ? value : 0;
 
@@ -60,6 +40,9 @@ function PedalBar({ label, value, color, active = true }: PedalBarProps) {
         <div className="pedal-bar-container">
             <div className="pedal-bar-label">{label}</div>
             <div className="pedal-bar-track">
+                <div className="pedal-bar-value">
+                    {customText || `${displayValue.toFixed(0)}`}
+                </div>
                 <div
                     className="pedal-bar-fill"
                     style={{
@@ -69,7 +52,6 @@ function PedalBar({ label, value, color, active = true }: PedalBarProps) {
                     }}
                 />
             </div>
-            <div className="pedal-bar-value">{displayValue.toFixed(0)}%</div>
         </div>
     );
 }
@@ -132,16 +114,21 @@ export function TelemetryPanel({
 
     return (
         <div className={`telemetry-panel compact ${isHidden ? 'hidden' : ''}`}>
+            {/* No Data Overlay */}
+            {!hasData && (
+                <div className="telemetry-no-data-overlay">
+                    <span>{t('telemetry.noDataAvailable')}</span>
+                </div>
+            )}
+
             <div className="telemetry-compact-row" style={{ position: 'relative' }}>
-                {/* No Data Overlay */}
-                {!hasData && (
-                    <div className="telemetry-no-data-overlay">
-                        <span>{t('telemetry.noDataAvailable')}</span>
-                    </div>
-                )}
 
                 {/* Main Content (Faded if no data) */}
-                <div className={`telemetry-content-wrapper ${!hasData ? 'faded' : ''}`}>
+                <div
+                    className={`telemetry-content-wrapper ${!hasData ? 'faded' : ''} clickable-row`}
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    title={t('telemetry.advancedInfo')}
+                >
                     {/* Pedals Section (Left) */}
                     <div className="telemetry-section pedals-section" style={{ borderRight: 'none' }}>
                         {/* Brake Indicator (Boolean) */}
@@ -151,6 +138,7 @@ export function TelemetryPanel({
                             value={brakeApplied ? 100 : 0}
                             color="red"
                             active={telemetry?.brake_applied !== undefined}
+                            customText=" "
                         />
                         {/* Accelerator Bar */}
                         <PedalBar
@@ -199,16 +187,7 @@ export function TelemetryPanel({
                         </div>
                     </div>
 
-                    {/* Toggle Advanced */}
-                    <button
-                        className={`toggle-advanced-btn ${showAdvanced ? 'active' : ''}`}
-                        onClick={() => setShowAdvanced(!showAdvanced)}
-                        title={t('telemetry.advancedInfo')}
-                    >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M6 9l6 6 6-6" />
-                        </svg>
-                    </button>
+
                 </div> {/* End telemetry-content-wrapper */}
             </div> {/* End telemetry-compact-row */}
 

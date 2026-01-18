@@ -15,7 +15,8 @@
         "recentClips": "最近片段",
         "segment": "视频分片",
         "speed": "倍速",
-        "more": "更多"
+        "more": "更多",
+        "noClipsFound": "未找到相关片段"
     },
     "telemetry": {
         "acc": "加速",
@@ -25,7 +26,8 @@
         "sei": "SEI",
         "noSei": "无 SEI 数据",
         "noDataAvailable": "无驾驶数据",
-        "mode": "模式"
+        "mode": "模式",
+        "advancedInfo": "高级信息"
     },
     "controls": {
         "playPause": "播放/暂停",
