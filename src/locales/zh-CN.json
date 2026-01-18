@@ -16,6 +16,7 @@
         "segment": "视频分片",
         "speed": "倍速",
         "more": "更多",
+        "cancel": "取消",
         "noClipsFound": "未找到相关片段"
     },
     "telemetry": {
@@ -33,8 +34,19 @@
         "playPause": "播放/暂停",
         "skipBack": "后退 {{seconds}} 秒",
         "skipForward": "快进 {{seconds}} 秒",
-        "toggleLayout": "切换布局",
-        "toggleTelemetry": "切换遥测数据"
+        "toggleLayout": "布局",
+        "toggleTelemetry": "驾驶数据",
+        "export": "导出视频",
+        "exporting": "导出中... {{percent}}%",
+        "startExport": "开始导出",
+        "cancelExport": "取消导出",
+        "exportScope": "导出范围",
+        "fullClip": "完整",
+        "currentSegment": "当前片段",
+        "backToGrid": "返回网格",
+        "layoutGrid3x2": "网格 (3x2)",
+        "layoutGrid2x2": "网格 (2x2)",
+        "layoutSingle": "单视图"
     },
     "cameras": {
         "front": "前视",
@@ -66,7 +78,8 @@
         "folderAccess": "访问文件夹时出错：{{error}}"
     },
     "warnings": {
-        "singleCategoryFolder": "您选择了一个单一类别的文件夹。其他类型的片段将不可见。请选择 'TeslaCam' 文件夹以获得完整体验。"
+        "singleCategoryFolder": "您选择了一个单一类别的文件夹。其他类型的片段将不可见。请选择 'TeslaCam' 文件夹以获得完整体验。",
+        "legacyExport": "WebCodecs API 不可用。导出速度较慢（实时录制）。"
     },
     "loading": {
         "filteringFiles": "正在扫描文件... {{percent}}%",

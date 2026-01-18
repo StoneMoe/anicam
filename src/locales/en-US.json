@@ -16,6 +16,7 @@
         "segment": "Segment",
         "speed": "Speed",
         "more": "More",
+        "cancel": "Cancel",
         "noClipsFound": "No clips found"
     },
     "telemetry": {
@@ -34,7 +35,18 @@
         "skipBack": "Skip back {{seconds}}s",
         "skipForward": "Skip forward {{seconds}}s",
         "toggleLayout": "Layout",
-        "toggleTelemetry": "Drive Data"
+        "toggleTelemetry": "Drive Data",
+        "export": "Export Video",
+        "exporting": "Exporting... {{percent}}%",
+        "startExport": "Start Export",
+        "cancelExport": "Cancel Export",
+        "exportScope": "Export Range",
+        "fullClip": "Full",
+        "currentSegment": "Current Segment",
+        "backToGrid": "Back to Grid",
+        "layoutGrid3x2": "Grid (3x2)",
+        "layoutGrid2x2": "Grid (2x2)",
+        "layoutSingle": "Single"
     },
     "cameras": {
         "front": "Front",
@@ -66,7 +78,8 @@
         "folderAccess": "Error accessing folder: {{error}}"
     },
     "warnings": {
-        "singleCategoryFolder": "You selected a single category folder. Some clips might not be visible. Please select the 'TeslaCam' folder for the full experience."
+        "singleCategoryFolder": "You selected a single category folder. Some clips might not be visible. Please select the 'TeslaCam' folder for the full experience.",
+        "legacyExport": "WebCodecs not available. Exporting will be slower (real-time)."
     },
     "loading": {
         "filteringFiles": "Scanning files... {{percent}}%",

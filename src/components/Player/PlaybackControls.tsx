@@ -21,6 +21,9 @@ interface PlaybackControlsProps {
     onPlaybackRateChange: (rate: number) => void;
     onToggleLayout: () => void;
     onToggleTelemetry: () => void;
+    onExport: () => void;
+
+
 
     // Display options
     showSegments?: boolean;
@@ -39,6 +42,8 @@ export function PlaybackControls({
     onPlaybackRateChange,
     onToggleLayout,
     onToggleTelemetry,
+    onExport,
+
     showSegments = false,
 }: PlaybackControlsProps) {
 
@@ -71,36 +76,39 @@ export function PlaybackControls({
     return (
         <div className="playback-controls">
             <div className="progress-container">
-                {/* Unified timeline with segment markers */}
-                {showSegments && (
-                    <div className="clip-timeline">
-                        {segmentTimings.map((timing) => (
-                            <div
-                                key={timing.index}
-                                className={`clip-segment ${timing.index === currentSegmentIndex ? 'active' : ''}`}
-                                title={`${t('common.segment')} ${timing.index + 1}`}
-                                style={{
-                                    flex: timing.duration,
-                                }}
-                            />
-                        ))}
+                <div className="timeline-row">
+                    <span className="time-text">{formatTime(currentTime)}</span>
+
+                    <div className="timeline-slider-container">
+                        {/* Unified timeline with segment markers */}
+                        {showSegments && (
+                            <div className="clip-timeline">
+                                {segmentTimings.map((timing) => (
+                                    <div
+                                        key={timing.index}
+                                        className={`clip-segment ${timing.index === currentSegmentIndex ? 'active' : ''}`}
+                                        title={`${t('common.segment')} ${timing.index + 1}`}
+                                        style={{
+                                            flex: timing.duration,
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Single unified progress bar */}
+                        <input
+                            type="range"
+                            className="progress-bar"
+                            min="0"
+                            max="100"
+                            value={progressPercent}
+                            step="0.1"
+                            onChange={(e) => onSeekPercent(parseFloat(e.target.value))}
+                        />
                     </div>
-                )}
 
-                {/* Single unified progress bar */}
-                <input
-                    type="range"
-                    className="progress-bar"
-                    min="0"
-                    max="100"
-                    value={progressPercent}
-                    step="0.1"
-                    onChange={(e) => onSeekPercent(parseFloat(e.target.value))}
-                />
-
-                <div className="time-display">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{formatTime(totalDuration)}</span>
+                    <span className="time-text total">{formatTime(totalDuration)}</span>
                 </div>
             </div>
 
@@ -176,6 +184,19 @@ export function PlaybackControls({
                                 <span>{t('controls.toggleTelemetry')}</span>
                             </button>
 
+                            {/* Export button */}
+                            <button
+                                className="menu-item"
+                                onClick={() => { onExport(); setIsMenuOpen(false); }}
+                            >
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7,10 12,15 17,10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                <span>{t('controls.export')}</span>
+                            </button>
+
                             <div className="menu-item" onClick={(e) => e.stopPropagation()}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <circle cx="12" cy="12" r="10" />
@@ -210,3 +231,4 @@ export function PlaybackControls({
         </div>
     );
 }
+

@@ -26,7 +26,12 @@ interface UseUnifiedTimelineReturn {
     clearErrors: () => void;
 }
 
-export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
+interface UseUnifiedTimelineProps {
+    onEnded?: () => void;
+}
+
+export function useUnifiedTimeline(props: UseUnifiedTimelineProps = {}): UseUnifiedTimelineReturn {
+    const { onEnded } = props;
     const [clip, setClip] = useState<ClipInfo | null>(null);
     const [segmentDurations, setSegmentDurations] = useState<number[]>([]);
     const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
@@ -255,6 +260,9 @@ export function useUnifiedTimeline(): UseUnifiedTimelineReturn {
                     pendingSeekTimeRef.current = 0; // Explicitly start at 0 for next segment
                     setCurrentSegmentIndex(currentSegmentIndex + 1);
                 }
+            } else if (clip && currentSegmentIndex === clip.segments.length - 1) {
+                // Last segment ended
+                onEnded?.();
             }
         };
 

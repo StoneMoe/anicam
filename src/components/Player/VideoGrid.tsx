@@ -10,6 +10,7 @@ interface VideoGridProps {
     videoRefs: Record<Camera, React.RefObject<HTMLVideoElement | null>>;
     layout: LayoutMode;
     onLayoutChange: (layout: LayoutMode) => void;
+    preferredLayout?: LayoutMode;
 }
 
 export function VideoGrid({
@@ -18,6 +19,7 @@ export function VideoGrid({
     videoRefs,
     layout,
     onLayoutChange,
+    preferredLayout = '3x2',
 }: VideoGridProps) {
     const [focusedCamera, setFocusedCamera] = useState<Camera>('front');
     // Use ref to track URLs for proper cleanup without causing infinite loops
@@ -115,17 +117,14 @@ export function VideoGrid({
     const handleClick = useCallback(
         (camera: Camera) => {
             if (layout === 'single') {
-                // If already in single view, go back to appropriate grid
-                const defaultGrid: LayoutMode = (!clip.cameras.has('left_pillar') && !clip.cameras.has('right_pillar'))
-                    ? '2x2'
-                    : '3x2';
-                onLayoutChange(defaultGrid);
+                // Return to preferred grid layout
+                onLayoutChange(preferredLayout);
             } else {
                 setFocusedCamera(camera);
                 onLayoutChange('single');
             }
         },
-        [layout, onLayoutChange, clip.cameras]
+        [layout, onLayoutChange, preferredLayout]
     );
 
     // Auto-switch to 2x2 if no pillar cameras
@@ -139,10 +138,9 @@ export function VideoGrid({
 
     const layoutClass = layout === '3x2' ? '' : `layout-${layout}`;
 
-    // Determine target layout for back button (default to 3x2, or 2x2 if no pillars)
-    const backLayout: LayoutMode = (!clip.cameras.has('left_pillar') && !clip.cameras.has('right_pillar'))
-        ? '2x2'
-        : '3x2';
+    // Determine target layout for back button
+    // Always respect preferred layout unless there are no pillars and it's set to 3x2 (handled by effect above usually but good to be safe)
+    const backLayout = preferredLayout;
 
     return (
         <div className={`video-grid ${layoutClass}`}>

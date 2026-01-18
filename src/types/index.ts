@@ -76,10 +76,27 @@ export interface SegmentTiming {
     duration: number;   // Segment duration
 }
 
+
 // Video player state
 export interface PlayerState {
     isPlaying: boolean;
     currentTime: number;
     duration: number;
     playbackRate: number;
+}
+
+// Unified export progress
+export interface ExportProgress {
+    phase: 'preparing' | 'encoding' | 'exporting' | 'complete' | 'error';
+    percent: number; // 0-100
+
+    // WebCodecs specific
+    processedFrames?: number;
+    totalFrames?: number;
+
+    // MediaRecorder specific
+    currentTime?: number;
+    totalDuration?: number;
+
+    error?: Error;
 }

@@ -1,0 +1,221 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.content {
+    background-color: #1a1a1f;
+    border-radius: 12px;
+    width: 600px;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+    padding: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    font-size: 20px;
+}
+
+.closeButton {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.closeButton:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.formGroup {
+    margin-bottom: 24px;
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 12px;
+}
+
+.optionButton {
+    flex: 1;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.optionButton:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.optionButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.optionButtonActive {
+    background-color: rgba(58, 134, 255, 0.2);
+    border-color: #3a86ff;
+    color: #3a86ff;
+}
+
+.progressContainer {
+    margin-bottom: 24px;
+}
+
+.progressHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.progressBarTrack {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progressBarFill {
+    height: 100%;
+    background-color: #3a86ff;
+    transition: width 0.2s ease;
+}
+
+.logs {
+    margin-top: 24px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.logItem {
+    margin-bottom: 4px;
+}
+
+.logPrefix {
+    color: rgba(255, 255, 255, 0.3);
+    margin-right: 8px;
+}
+
+.logEmpty {
+    color: rgba(255, 255, 255, 0.3);
+    font-style: italic;
+}
+
+.footer {
+    padding: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancelButton {
+    padding: 10px 20px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.primaryButton {
+    padding: 10px 20px;
+    background-color: #3a86ff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.primaryButton:hover {
+    background-color: #2a76ef;
+}
+
+.dangerButton {
+    padding: 10px 20px;
+    background-color: rgba(232, 33, 39, 0.2);
+    border: 1px solid #e82127;
+    border-radius: 6px;
+    color: #e82127;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dangerButton:hover {
+    background-color: rgba(232, 33, 39, 0.3);
+}
+
+.warning {
+    margin: 0 24px 16px;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: rgba(255, 171, 0, 0.1);
+    border: 1px solid rgba(255, 171, 0, 0.2);
+    color: #ffab00;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    line-height: title;
+}
+
+.warning svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}

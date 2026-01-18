@@ -17,7 +17,15 @@ i18n
                 translation: zhCN
             }
         },
-        fallbackLng: 'en-US',
+        fallbackLng: {
+            'zh': ['zh-CN'],
+            'zh-Hans': ['zh-CN'],
+            'default': ['en-US']
+        },
+        detection: {
+            order: ['navigator', 'localStorage', 'htmlTag', 'path', 'subdomain'],
+            caches: ['localStorage'],
+        },
         debug: true,
         interpolation: {
             escapeValue: false // not needed for react as it escapes by default
