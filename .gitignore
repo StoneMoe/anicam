@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 thumb_root/
+
+.wrangler/
